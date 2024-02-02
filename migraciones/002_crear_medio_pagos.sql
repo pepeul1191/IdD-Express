@@ -1,0 +1,5 @@
+CREATE TABLE medio_pagos (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    nombre VARCHAR(100) NOT NULL,
+    imagen_url VARCHAR(100) DEFAULT "img/pago.png" NOT NULL
+);
