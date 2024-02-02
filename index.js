@@ -1,4 +1,5 @@
 // importaciones
+const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
 const db = require('./configs/database');
@@ -6,6 +7,7 @@ const db = require('./configs/database');
 const app = express();
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, 'public')));
 // endpoints
 app.get('/', (req, res) => {
   var locals = {
