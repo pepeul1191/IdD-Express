@@ -17,7 +17,6 @@ app.get('/', (req, res) => {
 app.get('/nivel', async (req, res) => {
   // recepcionar parámetros
   const mensaje = req.query.mensaje;
-  console.log(mensaje);
   // conexión a db
   const query = 'SELECT * FROM niveles';
   const replacements = {};
@@ -51,8 +50,28 @@ app.post('/nivel/crear', async (req, res) => {
   const replacements = {
     nombre: nombre
   };
+  const rpta = await db.query(query, {
+    replacements,
+    type: db.QueryTypes.INSERT,
+  });
   // redireccionar listado
-  res.redirect('/nivel?mensaje=Registro agregado');
+  res.redirect(`/nivel?mensaje=Registro agregado con el id ${rpta[0]}`);
+});
+
+app.get('/nivel/eliminar', async (req, res) => {
+  // recepción de datos
+  const id = req.query.id;
+  // conexión a db
+  const query = 'DELETE FROM niveles WHERE id=:id;';
+  const replacements = {
+    id: id
+  };
+  await db.query(query, {
+    replacements,
+    type: db.QueryTypes.DELETE,
+  });
+  // redireccionar listado
+  res.redirect('/nivel?mensaje=Registro eliminado');
 });
 
 const PORT = 3000;
