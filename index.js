@@ -1,9 +1,12 @@
+// importaciones
 const express = require('express');
+const bodyParser = require('body-parser');
 const db = require('./configs/database');
-
+// configurar servidor
 const app = express();
 app.set('view engine', 'ejs');
-
+app.use(bodyParser.urlencoded({ extended: true }));
+// endpoints
 app.get('/', (req, res) => {
   var locals = {
     title: 'Bienvenido',
@@ -12,17 +15,40 @@ app.get('/', (req, res) => {
 });
 
 app.get('/nivel', async (req, res) => {
+  // conexión a db
   const query = 'SELECT * FROM niveles';
   const replacements = {};
   const niveles = await db.query(query, {
     replacements,
     type: db.QueryTypes.SELECT,
   });
+  // renderizar vista
   var locals = {
     title: 'Niveles',
     niveles: niveles
   };
   res.render('nivel/index', locals);
+});
+
+app.get('/nivel/agregar', async (req, res) => {
+  // renderizar vista
+  var locals = {
+    title: 'Niveles - Agregar',
+  };
+  res.render('nivel/agregar', locals);
+});
+
+app.post('/nivel/crear', async (req, res) => {
+  // recepción de datos
+  const id = req.body.id;
+  const nombre = req.body.nombre;
+  // conexión a db
+  const query = 'INSERT INTO niveles (nombre) VALUES (:nombre);';
+  const replacements = {
+    nombre: nombre
+  };
+  // redireccionar listado
+  res.redirect('/nivel?mensaje=Registro agregado');
 });
 
 const PORT = 3000;
