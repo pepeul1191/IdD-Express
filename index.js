@@ -15,6 +15,9 @@ app.get('/', (req, res) => {
 });
 
 app.get('/nivel', async (req, res) => {
+  // recepcionar parámetros
+  const mensaje = req.query.mensaje;
+  console.log(mensaje);
   // conexión a db
   const query = 'SELECT * FROM niveles';
   const replacements = {};
@@ -25,7 +28,8 @@ app.get('/nivel', async (req, res) => {
   // renderizar vista
   var locals = {
     title: 'Niveles',
-    niveles: niveles
+    niveles: niveles,
+    mensaje: mensaje
   };
   res.render('nivel/index', locals);
 });
