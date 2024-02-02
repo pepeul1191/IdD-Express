@@ -41,6 +41,26 @@ app.get('/nivel/agregar', async (req, res) => {
   res.render('nivel/agregar', locals);
 });
 
+app.get('/nivel/modificar', async (req, res) => {
+  // recepción de datos
+  const id = req.query.id;
+  // conexión a db
+  const query = 'SELECT * FROM niveles WHERE id=:id;';
+  const replacements = {
+    id: id
+  };
+  const rs = await db.query(query, {
+    replacements,
+    type: db.QueryTypes.SELECT,
+  });
+  // renderizar vista
+  var locals = {
+    title: 'Niveles - Modificar',
+    nivel: rs[0]
+  };
+  res.render('nivel/modificar', locals);
+});
+
 app.post('/nivel/crear', async (req, res) => {
   // recepción de datos
   const id = req.body.id;
@@ -56,6 +76,24 @@ app.post('/nivel/crear', async (req, res) => {
   });
   // redireccionar listado
   res.redirect(`/nivel?mensaje=Registro agregado con el id ${rpta[0]}`);
+});
+
+app.post('/nivel/editar', async (req, res) => {
+  // recepción de datos
+  const id = req.body.id;
+  const nombre = req.body.nombre;
+  // conexión a db
+  const query = 'UPDATE niveles SET nombre = :nombre WHERE id = :id;';
+  const replacements = {
+    id: id,
+    nombre: nombre
+  };
+  const rpta = await db.query(query, {
+    replacements,
+    type: db.QueryTypes.UPDATE,
+  });
+  // redireccionar listado
+  res.redirect(`/nivel?mensaje=Registro modificado con el id ${id}`);
 });
 
 app.get('/nivel/eliminar', async (req, res) => {
